@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Text } from 'react-native-design-utility';
+import { theme } from '../../constants/theme';
 
 const LibraryScreen: React.FC = () => {
     return (
