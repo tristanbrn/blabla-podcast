@@ -1,12 +1,39 @@
 import React from 'react';
 import { Box, Text } from 'react-native-design-utility';
-import { ScrollView } from 'react-native-gesture-handler';
+import { Image, ScrollView } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import { theme } from '../../constants/theme';
+import { itunesApiServices } from '../../services/ItunesApiService';
+import { IPodcast } from '../../types/Podcast';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useNavigation } from '@react-navigation/native';
+import { routes } from '../../navigations/routes';
 
-const PodcastCard: React.FC = () => {
-    return <Box w={100} h={100} radius={4} bg="red" mr="sm" />
+const Divider = () => <Box h={1} w="100%" bg="greyLightest" />;
+
+const PodcastTitle: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
+    const { navigate } = useNavigation()
+    return (
+        <TouchableOpacity onPress={() => navigate(routes.PODCAST, { podcast })}>
+            <Box dir="row" align="center">
+                <Box w={100} h={100} radius="xs" mr="sm">
+                    <Image 
+                        style={{ 
+                            flex: 1, 
+                        }} 
+                        source={{ uri: podcast.artworkUrl100 }} 
+                    />
+                </Box>
+                <Box f={1}>
+                    <Text size="sm" weight="bold" numberOfLines={1}>
+                        {podcast.trackName}
+                    </Text>
+                </Box>
+            </Box>
+            <Divider />
+        </TouchableOpacity>
+    )
 }
 
 const Category: React.FC<{ color: string, icon: string }> = ({ color, icon }) => {
@@ -24,30 +51,22 @@ const Category: React.FC<{ color: string, icon: string }> = ({ color, icon }) =>
 }
 
 const HomeScreen: React.FC = () => {
+    const [podcasts, setPodcasts] = React.useState<IPodcast[]>([]);
+
+    React.useEffect(() => {
+        itunesApiServices.searchPodcast('parlons').then(results => {
+          setPodcasts(results);
+        });
+      }, []);
+
+
     return (
         <Box f={1} bg="white">
-            <Box mt={100} mb="sm">
-                <Box ml="sm" mb="sm">
-                    <Text size="xl" weight="bold">Populaires</Text>
-                </Box>
-                <ScrollView contentContainerStyle={{marginLeft: theme.space.sm}} horizontal showsHorizontalScrollIndicator={false}>
-                    <PodcastCard />
-                    <PodcastCard />
-                    <PodcastCard />
-                    <PodcastCard />
-                    <PodcastCard />
-                </ScrollView>
-            </Box>
             <Box>
-                <Box ml="sm" mb="sm">
-                    <Text size="xl" weight="bold">Catégories</Text>
-                </Box>
-                <ScrollView contentContainerStyle={{marginLeft: theme.space.sm}} horizontal showsHorizontalScrollIndicator={false}>
-                    <Category icon="heart" color={theme.color.red} />
-                    <Category icon="heart" color={theme.color.red} />
-                    <Category icon="heart" color={theme.color.red} />
-                    <Category icon="heart" color={theme.color.red} />
-                    <Category icon="heart" color={theme.color.red} />
+                <ScrollView>
+                    {podcasts.map(podcast => (
+                        <PodcastTitle podcast={podcast} key={podcast.trackId} />
+                    ))}
                 </ScrollView>
             </Box>
         </Box>
