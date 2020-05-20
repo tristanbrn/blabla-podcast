@@ -4,7 +4,7 @@ class ItunesApiServices {
   private baseUrl = 'https://itunes.apple.com/search';
 
   public async searchPodcast(term: string): Promise<IPodcast[]> {
-    const url = `${this.baseUrl}?entity=podcast&term=${term}`;
+    const url = `${this.baseUrl}?media=podcast&country=FR&term=${term}`;
 
     const res = await fetch(url, {
       method: 'GET',

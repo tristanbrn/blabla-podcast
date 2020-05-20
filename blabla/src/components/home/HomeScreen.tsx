@@ -10,22 +10,36 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import { routes } from '../../navigations/routes';
 
+import Header from '../commons/Header'
+
 const Divider = () => <Box h={1} w="100%" bg="greyLightest" />;
 
-const PodcastTitle: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
+const PodcastCard: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
     const { navigate } = useNavigation()
+
     return (
         <TouchableOpacity onPress={() => navigate(routes.PODCAST, { podcast })}>
-            <Box dir="row" align="center">
-                <Box w={100} h={100} radius="xs" mr="sm">
+            <Box mr="sm" w={150} h={200}>
+                <Box 
+                  w={150} 
+                  h={150} 
+                  radius="xs"
+                  style={{
+                      shadowOffset: { width: 0, height: 0 },
+                      shadowOpacity: 0.2,
+                      shadowColor: 'black',
+                      shadowRadius: 2
+                  }}
+                >
                     <Image 
                         style={{ 
                             flex: 1, 
+                            borderRadius: theme.radius.xs
                         }} 
-                        source={{ uri: podcast.artworkUrl100 }} 
+                        source={{ uri: podcast.artworkUrl600 }} 
                     />
                 </Box>
-                <Box f={1}>
+                <Box f={1} my="xs">
                     <Text size="sm" weight="bold" numberOfLines={1}>
                         {podcast.trackName}
                     </Text>
@@ -62,10 +76,18 @@ const HomeScreen: React.FC = () => {
 
     return (
         <Box f={1} bg="white">
+            <Header title="Découvrir" />
             <Box>
-                <ScrollView>
+                <Box px="sm" my="md">
+                    <Text weight="bold">Populaires</Text>
+                </Box>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={{ marginLeft: theme.space.sm }}
+                >
                     {podcasts.map(podcast => (
-                        <PodcastTitle podcast={podcast} key={podcast.trackId} />
+                        <PodcastCard podcast={podcast} key={podcast.trackId} />
                     ))}
                 </ScrollView>
             </Box>

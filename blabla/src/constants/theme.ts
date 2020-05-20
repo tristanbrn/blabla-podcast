@@ -53,6 +53,8 @@ const color = {
         md: 18,
         lg: 20,
         xl: 24,
+        "2xl": 30,
+        "3xl":40
       },
       weight: {
         light: '200',
