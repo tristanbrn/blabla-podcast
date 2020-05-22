@@ -10,14 +10,21 @@ import { metrics } from '../../constants/metrics';
 import { theme } from '../../constants/theme';
 import { ScrollView } from 'react-native-gesture-handler';
 import FeatherIcon from 'react-native-vector-icons/Feather';
-import TrackPlayer from 'react-native-track-player';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
+import { observer } from 'mobx-react';
+import { useRootStore } from '../../contexts/RootStoreContext';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 type PodcastScreenRouteProp = RouteProp<
     { Podcast: { podcast: IPodcast } },
     'Podcast'
 >;
 
+var frLocale = require('date-fns/locale/fr')
+
 const PodcastScreen: React.FC = () => {
+    const { playerStore } = useRootStore();
     const { params } = useRoute<PodcastScreenRouteProp>();
     const [feed, setFeed] = React.useState<Feed | null>(null)
 
@@ -65,39 +72,33 @@ const PodcastScreen: React.FC = () => {
                             <Text weight="bold" numberOfLines={1} color="white">
                                 {params.podcast.trackName}
                             </Text>
-                            <Text size="xs" color="white">{feed?.description}</Text>
+                            <Text size="xs" color="white" numberOfLines={4}>{feed?.description}</Text>
                         </Box>
                     </ImageBackground>
                     {feed?.items.map(item => (
                         <Box key={item.id}>
                             <Box dir="row" px="sm" h={75} justify="between" align="center">
-                                <Box f={1} mr="sm">
-                                    <Text 
-                                        size="sm" 
-                                        numberOfLines={1}
-                                        weight="bold"
-                                        onPress={ async () => {
-                                            console.log(item.enclosures[0].url)
-                                            await TrackPlayer.reset();
-                                            await TrackPlayer.add({
-                                                id: 'trackId',
+                                <Box f={1}>
+                                    <TouchableOpacity
+                                        onPress={async () => {
+                                            await playerStore.start({
+                                                id: item.id,
                                                 url: item.enclosures[0].url,
-                                                title: 'Track Title',
-                                                artist: 'Track Artist',
-                                                // artwork: require('track.png')
+                                                title: item.title,
+                                                artist: params.podcast.artistName,
+                                                artwork: item.itunes.image,
+                                                duration: item.itunes.duration,
                                             });
-                                            TrackPlayer.play();
-                                        }}
-                                    >
-                                    {item.title}
-                                    </Text>
-                                    <Text 
-                                        size="xs" 
-                                        numberOfLines={1}  
-                                        color="grey"
-                                    >
-                                    {item.itunes.duration}
-                                    </Text>
+                                        }}>
+                                        <Text numberOfLines={1} weight="bold" size="sm">{item.title}</Text>
+                                        <Box dir="row">
+                                            <Text color="greyLight" size="xs" weight="bold" mr="sm">{formatDistanceToNow(new Date(item.published), 
+                                                {addSuffix: true, locale: frLocale}
+                                                )}
+                                            </Text>
+                                            <Text color="greyLight" size="xs">{item.itunes.duration}</Text>
+                                        </Box>
+                                    </TouchableOpacity>
                                 </Box>
                                 <Box>
                                     <FeatherIcon name="download-cloud" size={metrics.appIconSize} color={theme.color.grey} />
@@ -112,4 +113,4 @@ const PodcastScreen: React.FC = () => {
     );
 }
 
-export default PodcastScreen;
+export default observer(PodcastScreen);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Text } from 'react-native-design-utility';
 import { Image, ScrollView } from 'react-native';
 import FeatherIcon from 'react-native-vector-icons/Feather';
+import TrackPlayer from 'react-native-track-player';
 
 import { theme } from '../../constants/theme';
 import { itunesApiServices } from '../../services/ItunesApiService';
@@ -11,11 +12,20 @@ import { useNavigation } from '@react-navigation/native';
 import { routes } from '../../navigations/routes';
 
 import Header from '../commons/Header'
+import TrackPlayerServices from '../../services/TrackPlayerServices';
 
 const Divider = () => <Box h={1} w="100%" bg="greyLightest" />;
 
 const PodcastCard: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
     const { navigate } = useNavigation()
+
+    React.useEffect(() => {
+        TrackPlayer.setupPlayer().then(async () => {
+        
+        }).catch(e => console.log('error, e'));
+
+        TrackPlayer.registerPlaybackService( () => TrackPlayerServices)
+    }, [])
 
     return (
         <TouchableOpacity onPress={() => navigate(routes.PODCAST, { podcast })}>
@@ -40,36 +50,37 @@ const PodcastCard: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
                     />
                 </Box>
                 <Box f={1} my="xs">
-                    <Text size="sm" weight="bold" numberOfLines={1}>
+                    <Text size="xs" numberOfLines={1}>
                         {podcast.trackName}
                     </Text>
                 </Box>
             </Box>
-            <Divider />
         </TouchableOpacity>
     )
 }
 
-const Category: React.FC<{ color: string, icon: string }> = ({ color, icon }) => {
-    const bg = `${color}50`;
-    return ( 
-        <Box center w={75} mr="sm" mb="2xs">
-            <Box circle={75} bg={bg} center>
-                <FeatherIcon name={icon} size={25} color={color} />
-            </Box>
-            <Box>
-                <Text size="xs">Cinéma</Text>
-            </Box>
-        </Box>
-    )
-}
-
 const HomeScreen: React.FC = () => {
-    const [podcasts, setPodcasts] = React.useState<IPodcast[]>([]);
+    const [bestPodcast, setBestPodcast] = React.useState<IPodcast[]>([]);
+    const [popularPodcasts, setPopularPodcasts] = React.useState<IPodcast[]>([]);
+    const [cinemaPodcasts, setCinemaPodcasts] = React.useState<IPodcast[]>([]);
+    const [comicPodcasts, setComicPodcasts] = React.useState<IPodcast[]>([]);
+    const [musicPodcasts, setMusicPodcasts] = React.useState<IPodcast[]>([]);
 
     React.useEffect(() => {
-        itunesApiServices.searchPodcast('parlons').then(results => {
-          setPodcasts(results);
+        itunesApiServices.searchPodcastByTerm('peloches').then(results => {
+            setBestPodcast(results);
+        });
+        itunesApiServices.searchPodcastById('').then(results => {
+            setPopularPodcasts(results);
+        });
+        itunesApiServices.searchPodcastById('1309').then(results => {
+            setCinemaPodcasts(results);
+        });
+        itunesApiServices.searchPodcastById('1303').then(results => {
+            setComicPodcasts(results);
+        });
+        itunesApiServices.searchPodcastById('1310').then(results => {
+            setMusicPodcasts(results);
         });
       }, []);
 
@@ -77,20 +88,82 @@ const HomeScreen: React.FC = () => {
     return (
         <Box f={1} bg="white">
             <Header title="Découvrir" />
-            <Box>
-                <Box px="sm" my="md">
-                    <Text weight="bold">Populaires</Text>
+            <ScrollView>
+                <Box mt="sm">
+                    <Box px="sm" mb="md">
+                        <Text size="md" weight="bold">Le meilleur</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {bestPodcast.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
                 </Box>
-                <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{ marginLeft: theme.space.sm }}
-                >
-                    {podcasts.map(podcast => (
-                        <PodcastCard podcast={podcast} key={podcast.trackId} />
-                    ))}
-                </ScrollView>
-            </Box>
+                <Divider />
+                <Box mt="sm">
+                    <Box px="sm" mb="md">
+                        <Text size="md" weight="bold">Populaires</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {popularPodcasts.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
+                </Box>
+                <Divider />
+                <Box mt="sm">
+                    <Box px="sm" mb="md">
+                        <Text size="md" weight="bold">Télévision &amp; Cinéma</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {cinemaPodcasts.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
+                </Box>
+                <Divider />
+                <Box mt="sm">
+                    <Box px="sm" mb="md">
+                        <Text weight="bold">Musique</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {musicPodcasts.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
+                </Box>
+                <Divider />
+                <Box mt="sm">
+                    <Box px="sm" mb="md">
+                        <Text weight="bold">Humour</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {comicPodcasts.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
+                </Box>
+            </ScrollView>
         </Box>
     )
 }

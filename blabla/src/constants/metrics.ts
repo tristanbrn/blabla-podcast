@@ -1,4 +1,14 @@
+function makeHitSlop(size: number) {
+    return {
+        top: size,
+        right: size,
+        bottom: size,
+        left: size,
+    };
+}
+
 export const metrics = {
     tabIconSize: 24,
-    appIconSize: 18
+    appIconSize: 18,
+    makeHitSlop
 }
