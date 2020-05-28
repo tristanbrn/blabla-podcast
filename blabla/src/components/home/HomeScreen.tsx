@@ -60,18 +60,14 @@ const PodcastCard: React.FC<{ podcast: IPodcast }> = ({ podcast }) => {
 }
 
 const HomeScreen: React.FC = () => {
-    const [bestPodcast, setBestPodcast] = React.useState<IPodcast[]>([]);
-    const [popularPodcasts, setPopularPodcasts] = React.useState<IPodcast[]>([]);
+    const [societyPodcasts, setSocietyPodcasts] = React.useState<IPodcast[]>([]);
     const [cinemaPodcasts, setCinemaPodcasts] = React.useState<IPodcast[]>([]);
     const [comicPodcasts, setComicPodcasts] = React.useState<IPodcast[]>([]);
     const [musicPodcasts, setMusicPodcasts] = React.useState<IPodcast[]>([]);
 
     React.useEffect(() => {
-        itunesApiServices.searchPodcastByTerm('peloches').then(results => {
-            setBestPodcast(results);
-        });
-        itunesApiServices.searchPodcastById('').then(results => {
-            setPopularPodcasts(results);
+        itunesApiServices.searchPodcastById('1302').then(results => {
+            setSocietyPodcasts(results);
         });
         itunesApiServices.searchPodcastById('1309').then(results => {
             setCinemaPodcasts(results);
@@ -87,41 +83,11 @@ const HomeScreen: React.FC = () => {
 
     return (
         <Box f={1} bg="white">
-            <Header title="Découvrir" />
-            <ScrollView>
-                <Box mt="sm">
-                    <Box px="sm" mb="md">
-                        <Text size="md" weight="bold">Le meilleur</Text>
-                    </Box>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ marginLeft: theme.space.sm }}
-                    >
-                        {bestPodcast.map(podcast => (
-                            <PodcastCard podcast={podcast} key={podcast.trackId} />
-                        ))}
-                    </ScrollView>
-                </Box>
-                <Divider />
-                <Box mt="sm">
-                    <Box px="sm" mb="md">
-                        <Text size="md" weight="bold">Populaires</Text>
-                    </Box>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={{ marginLeft: theme.space.sm }}
-                    >
-                        {popularPodcasts.map(podcast => (
-                            <PodcastCard podcast={podcast} key={podcast.trackId} />
-                        ))}
-                    </ScrollView>
-                </Box>
-                <Divider />
-                <Box mt="sm">
-                    <Box px="sm" mb="md">
-                        <Text size="md" weight="bold">Télévision &amp; Cinéma</Text>
+        <ScrollView>
+            <Header title="Bonjour Tristan" subtitle="Notre sélection pour vous..." />
+                <Box mt="xl">
+                    <Box px="sm" mb="xs">
+                        <Text size="sm" weight="bold" uppercase>Télévision &amp; Cinéma</Text>
                     </Box>
                     <ScrollView
                         horizontal
@@ -133,10 +99,23 @@ const HomeScreen: React.FC = () => {
                         ))}
                     </ScrollView>
                 </Box>
-                <Divider />
                 <Box mt="sm">
-                    <Box px="sm" mb="md">
-                        <Text weight="bold">Musique</Text>
+                    <Box px="sm" mb="xs">
+                        <Text size="sm" weight="bold" uppercase>Société</Text>
+                    </Box>
+                    <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={{ marginLeft: theme.space.sm }}
+                    >
+                        {societyPodcasts.map(podcast => (
+                            <PodcastCard podcast={podcast} key={podcast.trackId} />
+                        ))}
+                    </ScrollView>
+                </Box>
+                <Box mt="sm">
+                    <Box px="sm" mb="xs">
+                        <Text size="sm" weight="bold" uppercase>Musique</Text>
                     </Box>
                     <ScrollView
                         horizontal
@@ -148,10 +127,9 @@ const HomeScreen: React.FC = () => {
                         ))}
                     </ScrollView>
                 </Box>
-                <Divider />
                 <Box mt="sm">
-                    <Box px="sm" mb="md">
-                        <Text weight="bold">Humour</Text>
+                    <Box px="sm" mb="xs">
+                        <Text size="sm" weight="bold" uppercase>Humour</Text>
                     </Box>
                     <ScrollView
                         horizontal

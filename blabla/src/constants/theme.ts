@@ -1,5 +1,10 @@
 const color = {
     black: '#212121',
+
+    orangeLight: '#FF7C46',
+    orangeDark: '#FE6D2B',
+
+    blue: '#2618BA',
   
     greyDarkest: '#242424',
     greyDarker: '#616161',
@@ -22,7 +27,6 @@ const color = {
     blueDarkest: '#0d47a1',
     blueDarker: '#1565c0',
     blueDark: '#1976d2',
-    blue: '#2196f3',
     blueLight: '#42a5f5',
     blueLighter: '#64b5f6',
     blueLightest: '#90caf9',

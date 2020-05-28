@@ -11,6 +11,7 @@ import { Image } from 'react-native';
 
 const Player: React.FC = () => {
     const { playerStore } = useRootStore();
+    console.log(playerStore.currentTrack)
 
     if(!playerStore.currentTrack) return null;
 
@@ -33,7 +34,10 @@ const Player: React.FC = () => {
                 )}
              </Box>
              <Box f={1}>
-                <Text color="greyDarker" numberOfLines={1}>
+                <Text size="xs" color="greyDarker" weight="bold" numberOfLines={1}>
+                    {playerStore.currentTrack?.artist}
+                </Text>
+                <Text color="black" numberOfLines={1}>
                     {playerStore.currentTrack?.title}
                 </Text>
              </Box>

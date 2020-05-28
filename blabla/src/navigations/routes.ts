@@ -1,7 +1,6 @@
 export const routes = {
     HOME: 'Accueil',
-    LIBRARY: 'Library',
-    DOWNLOADS: 'Downloads',
-    PROFILE: 'Profile',
+    SEARCH: 'Recherche',
+    PLAYER: 'Lecteur',
     PODCAST: 'Podcast'
 }

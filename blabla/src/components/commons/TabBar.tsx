@@ -12,15 +12,14 @@ import { theme } from '../../constants/theme';
 
 const ICONS = {
     [routes.HOME]: 'home',
-    [routes.LIBRARY]: 'inbox',
-    [routes.DOWNLOADS]: 'headphones',
-    [routes.PROFILE]: 'user',
+    [routes.SEARCH]: 'search',
+    [routes.PLAYER]: 'headphones',
 }
 
 const TabBar: React.FC<BottomTabBarProps> = props => {
     const insets = useSafeArea();
 
-    const activeTintColor = theme.color.blueDark;
+    const activeTintColor = theme.color.blue;
     const inactiveTintColor = theme.color.greyLight;
 
     const onTabPress = ( routeName: string, routeIndex: number ) => () => {
@@ -30,7 +29,7 @@ const TabBar: React.FC<BottomTabBarProps> = props => {
     return (
         <>
             <Player />
-            <Box h={50 + insets.bottom} w="100%" bg="white" dir="row">
+            <Box h={50 + insets.bottom} w="100%" bg="#F9F9F9" dir="row">
                 {props.state.routes.map((route, index) => {
                     const icon = ICONS[route.name];
                     const color = 

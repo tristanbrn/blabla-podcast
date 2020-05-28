@@ -4,9 +4,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import { routes } from './routes';
 import HomeScreen from '../components/home/HomeScreen';
-import LibraryScreen from '../components/library/LibraryScreen';
-import DownloadsScreen from '../components/downloads/DownloadScreen';
-import ProfileScreen from '../components/profile/ProfileScreen';
+import SearchScreen from '../components/search/SearchScreen';
+import PlayerScreen from '../components/player/PlayerScreen';
 import { theme } from '../constants/theme';
 import PodcastScreen from '../components/podcast/PodcastScreen';
 import { IPodcast } from '../types/Podcast';
@@ -53,10 +52,9 @@ const TabNavigation: React.FC = () => {
             tabBarOptions={{
                 showLabel: false
             }}>
+            <Tab.Screen name={routes.SEARCH} component={SearchScreen} />
             <Tab.Screen name={routes.HOME} component={HomeNavigation} />
-            <Tab.Screen name={routes.LIBRARY} component={LibraryScreen} />
-            <Tab.Screen name={routes.DOWNLOADS} component={DownloadsScreen} />
-            <Tab.Screen name={routes.PROFILE} component={ProfileScreen} />
+            <Tab.Screen name={routes.PLAYER} component={PlayerScreen} />
         </Tab.Navigator>
     )
 }
